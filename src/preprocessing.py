@@ -4,7 +4,8 @@ import random
 import numpy as np
 import pandas as pd
 import torch
-from torch.utils.data import TensorDataset
+from torch.utils.data import TensorDataset, DataLoader
+
 from sklearn.preprocessing import StandardScaler
 
 # ------------------------------------------------------------
@@ -228,6 +229,23 @@ def save_pt(output_path, **kwargs):
     torch.save(to_save, output_path)
     print(f"Saved: {output_path}")
 
+
+def make_loader(ds, batch_size, shuffle, drop_last):
+    # Determine optimal number of worker processes for data loading
+    cpu_cores = os.cpu_count() or 2
+    num_workers = max(2, min(4, cpu_cores))
+
+    # Create DataLoader with performance optimizations
+    return DataLoader(
+        ds,
+        batch_size=batch_size,
+        shuffle=shuffle,
+        drop_last=drop_last,
+        num_workers=num_workers,
+        pin_memory=True,  # Faster GPU transfer
+        pin_memory_device="cuda" if torch.cuda.is_available() else "",
+        prefetch_factor=4,  # Load 4 batches ahead
+    )
 
 # ------------------------------------------------------------
 # 6. Main preprocessing pipeline
