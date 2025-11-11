@@ -55,7 +55,7 @@ sns.set(font_scale=1.4)
 sns.set_style('white')
 plt.rc('font', size=14)
 
-from preprocessing import *
+from challenge_AN2DL_2025.src.preprocessing import *
 
 def recurrent_summary(model, input_size):
     """
