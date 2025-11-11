@@ -299,6 +299,7 @@ def train_one_epoch(model, train_loader, criterion, optimizer, scaler, device, l
 
         # Backward pass with gradient scaling
         scaler.scale(loss).backward()
+        torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
         scaler.step(optimizer)
         scaler.update()
 
